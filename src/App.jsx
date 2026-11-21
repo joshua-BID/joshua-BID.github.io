@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { T, PROJ, STACK, LINK } from "./data.js";
 import Hero from "./Hero.jsx";
+import Duck from "./Duck.jsx";
 
 const ls = (k, d) => { try { return localStorage.getItem(k) || d; } catch { return d; } };
 const IDS = ["about", "projects", "stack", "contact"];
@@ -33,7 +34,7 @@ export default function App() {
   const [lang, setLang] = useState(() => ls("lang", "it"));
   const [theme, setTheme] = useState(() => ls("theme", "dark"));
   const [replay, setReplay] = useState(0);
-  const t = T[lang], flow = useRef(), fill = useRef(), egg = useRef();
+  const t = T[lang], flow = useRef(), fill = useRef();
   const col = theme === "dark" ? "e6edf6" : "0f172a";
 
   useEffect(() => {
@@ -46,8 +47,7 @@ export default function App() {
       const r = flow.current.getBoundingClientRect(), y = innerHeight * 0.6;
       fill.current.style.height = Math.min(Math.max((y - r.top) / r.height, 0), 1) * 100 + "%";
       document.querySelectorAll(".node").forEach((n) => n.classList.toggle("on", n.getBoundingClientRect().top < y));
-      const e = egg.current.getBoundingClientRect(), p = Math.min(Math.max(-e.top / (e.height - innerHeight), 0), 1);
-      egg.current.classList.toggle("s1", p > 0.2); egg.current.classList.toggle("s2", p > 0.55);
+      document.querySelectorAll(".rv:not(.in)").forEach((el) => { if (el.getBoundingClientRect().top < innerHeight * 0.8) el.classList.add("in"); });
     };
     f(); addEventListener("scroll", f, { passive: true }); addEventListener("resize", f);
     return () => { removeEventListener("scroll", f); removeEventListener("resize", f); };
@@ -66,10 +66,14 @@ export default function App() {
         </div>
       </header>
 
-      <Hero name="Joshua Galarza" role={t.role} tag={t.tag} cta={t.cta} go={go} replay={replay} />
+      <Hero name="Joshua Galarza" role={t.role} tag={t.tag} replay={replay} />
 
       <main className="wrap" ref={flow}>
         <div className="rail"><div className="fill" ref={fill} /></div>
+        <div className="cta row">
+          <button className="btn pri" onClick={() => go("projects")}>{t.cta[0]}</button>
+          <button className="btn" onClick={() => go("contact")}>{t.cta[1]}</button>
+        </div>
 
         <Sec id="about" n={0} st={t.stages[0]} title={t.aTitle}>
           <div className="about">
@@ -121,15 +125,15 @@ export default function App() {
             <a className="btn" href={B + "cv.pdf"} download>{t.btn[3]}</a>
           </div>
         </Sec>
+        <div className="egg">
+          <div className="gap" />
+          <div className="eg"><i className="node" /><h4>{t.egg[0]}</h4></div>
+          <div className="gap" />
+          <div className="eg"><i className="node" /><div className="rv"><p>{t.egg[1]} &gt;_&lt;</p><Duck /></div></div>
+          <div className="gap short" />
+        </div>
       </main>
       <footer>Joshua Galarza, {new Date().getFullYear()}</footer>
-
-      <div className="egg" ref={egg} aria-hidden="true">
-        <div className="egg-in">
-          <h2 className="fin">{t.egg[0]}</h2>
-          <p className="cur">{t.egg[1]} &gt;_&lt; 🦆</p>
-        </div>
-      </div>
     </>
   );
 }
