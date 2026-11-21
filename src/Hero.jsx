@@ -9,20 +9,20 @@ export default function Hero({ name, role, tag, replay }) {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let w, h, ps = [], raf, t0 = performance.now();
     const build = () => {
-      w = c.clientWidth;
-      const lines = w < 640 ? name.split(" ") : [name], L = Math.max(...lines.map((l) => l.length));
-      const fs = Math.min(w / (L * 0.62), 118), lh = fs * 1.3;
-      h = Math.ceil(lh * lines.length);
-      c.style.height = h + "px"; c.width = w * dpr; c.height = h * dpr;
+      w = c.clientWidth; h = c.clientHeight; c.width = w * dpr; c.height = h * dpr;
       x.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const lines = w < 640 ? name.split(" ") : [name], n = lines.length, L = Math.max(...lines.map((l) => l.length));
+      const fs = Math.min(w / (L * 0.62), 118), lh = fs * 1.3, top = h * 0.34 - (n * lh) / 2;
       const o = document.createElement("canvas"); o.width = w; o.height = h;
       const g = o.getContext("2d");
       g.font = `700 ${fs}px "JetBrains Mono", monospace`; g.textAlign = "center"; g.textBaseline = "middle";
-      lines.forEach((l, k) => g.fillText(l, w / 2, lh * (k + 0.5)));
+      lines.forEach((l, k) => g.fillText(l, w / 2, top + lh * (k + 0.5)));
       const d = g.getImageData(0, 0, w, h).data, st = w < 600 ? 4 : 5; ps = [];
       for (let y = 0; y < h; y += st) for (let i = 0; i < w; i += st)
-        if (d[(y * w + i) * 4 + 3] > 128)
-          ps.push({ tx: i, ty: y, sx: -Math.random() * w * 0.4, sy: y + (Math.random() - 0.5) * fs * 0.8, dl: Math.random() * 0.6 + (i / w) * 1.3 + Math.floor(y / lh) * 1.8, v: Math.random() < 0.5 });
+        if (d[(y * w + i) * 4 + 3] > 128) {
+          const k = Math.min(Math.max(Math.floor((y - top) / lh), 0), n - 1);
+          ps.push({ tx: i, ty: y, sx: -Math.random() * w * 0.4, sy: y + (Math.random() - 0.5) * fs * 0.8, dl: Math.random() * 0.6 + (i / w) * 1.3 + k * 1.8, v: Math.random() < 0.5 });
+        }
     };
     const draw = (now) => {
       const t = reduce ? 9 : (now - t0) / 1000, s = getComputedStyle(document.documentElement);
@@ -35,9 +35,12 @@ export default function Hero({ name, role, tag, replay }) {
       });
       raf = requestAnimationFrame(draw);
     };
-    build(); document.fonts?.ready.then(build); addEventListener("resize", build);
-    raf = requestAnimationFrame(draw);
-    return () => { cancelAnimationFrame(raf); removeEventListener("resize", build); };
+    // aspetta che JetBrains Mono sia davvero caricato, altrimenti il canvas disegna un font di riserva
+    let dead = false;
+    const start = () => { if (dead) return; build(); t0 = performance.now(); raf = requestAnimationFrame(draw); };
+    (document.fonts ? document.fonts.load('700 100px "JetBrains Mono"') : Promise.resolve()).then(start, start);
+    addEventListener("resize", build);
+    return () => { dead = true; cancelAnimationFrame(raf); removeEventListener("resize", build); };
   }, [name, replay]);
 
   return (
