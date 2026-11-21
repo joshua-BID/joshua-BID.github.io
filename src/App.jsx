@@ -126,7 +126,7 @@ export default function App() {
 
       <div className="egg" ref={egg} aria-hidden="true">
         <div className="egg-in">
-          <h4 className="fin">{t.egg[0]}</h4>
+          <h2 className="fin">{t.egg[0]}</h2>
           <p className="cur">{t.egg[1]} &gt;_&lt; 🦆</p>
         </div>
       </div>

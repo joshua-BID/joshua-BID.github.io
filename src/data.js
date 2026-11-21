@@ -7,10 +7,10 @@ export const LINK = {
 
 // i = slug simple-icons, g = testo/glifo di riserva se l'icona non carica
 export const STACK = [
-  [{ n: "Python", i: "python" }, { n: "JavaScript", i: "javascript" }, { n: "Node.js", i: "nodedotjs" }, { n: "HTML", i: "html5", g: "HTML" }, { n: "CSS", i: "css3", g: "CSS" }],
-  [{ n: "PostgreSQL", i: "postgresql" }, { n: "MySQL", i: "mysql" }, { n: "MongoDB", i: "mongodb" }],
-  [{ n: "Docker", i: "docker" }, { n: "Linux", i: "linux" }, { n: "Cloud", g: "☁\uFE0E" }, { n: "API REST", g: "{ }" }, { n: "Networking", g: "⇄" }],
-  [{ n: "Metabase", i: "metabase" }, { n: "Plotly", i: "plotly" }, { n: "Streamlit", i: "streamlit" }, { n: "scikit-learn", i: "scikitlearn" }, { n: "pandas", i: "pandas" }],
+  [{ n: "Python", i: "python" }, { n: "Node.js", i: "nodedotjs" }, { n: "HTML", i: "html5", g: "HTML" }, { n: "CSS", i: "css3", g: "CSS" }, { n: "JavaScript", i: "javascript" }],
+  [{ n: "PostgreSQL", i: "postgresql" }, { n: "MongoDB", i: "mongodb" }, { n: "MySQL", i: "mysql" }],
+  [{ n: "Docker", i: "docker" }, { n: "API REST", g: "{ }" }, { n: "Linux", i: "linux" }, { n: "Cloud", g: "☁\uFE0E" }, { n: "Networking", g: "⇄" }],
+  [{ n: "Metabase", i: "metabase" }, { n: "pandas", i: "pandas" }, { n: "Streamlit", i: "streamlit" }, { n: "scikit-learn", i: "scikitlearn" }, { n: "Plotly", i: "plotly" }],
 ];
 
 export const PROJ = [
